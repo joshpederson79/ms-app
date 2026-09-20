@@ -1,0 +1,28 @@
+/* Design tokens from Moonshine_Saints_Design_System.md */
+:root {
+  --color-bg: #0f1419;
+  --color-surface: #1b2d3d;
+  --color-surface-hover: #2a3d4f;
+  --color-border: #4a5d73;
+  --color-copper: #a0714f;
+  --color-copper-dark: #8a5f40;
+  --color-cream: #d4c5a0;
+  --color-silver: #c0c0c0;
+  --color-text: #e8e8e8;
+  --color-text-secondary: #999999;
+  --color-text-muted: #666666;
+  --color-error: #d9776b;
+
+  --font-heading: Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+
+  --radius-container: 8px;
+  --radius-control: 4px;
+  --tap-target: 44px;
+}

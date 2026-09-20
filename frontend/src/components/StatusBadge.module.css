@@ -1,0 +1,10 @@
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  font-size: 10px;
+  color: var(--color-copper);
+}
+.final { background: rgba(160, 113, 79, 0.3); }
+.wip { background: rgba(160, 113, 79, 0.2); }
+.duet { background: rgba(192, 192, 192, 0.2); color: var(--color-silver); }

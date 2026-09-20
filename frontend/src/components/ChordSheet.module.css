@@ -1,0 +1,4 @@
+.sheet { font-family: var(--font-mono); }
+.line { margin: 0 0 var(--space-1); font: inherit; white-space: pre; overflow-x: auto; }
+.chords { color: var(--color-copper); font-weight: 600; }
+.lyric { color: var(--color-text); }
