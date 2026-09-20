@@ -4,5 +4,5 @@ import { useAuth } from '../context/AuthContext.jsx';
 export default function ProtectedRoute() {
   const { user, loading } = useAuth();
   if (loading) return <p className="page muted">Loading…</p>;
-  return user ? <Outlet /> : <Navigate to="/onboarding/invite" replace />;
+  return user ? <Outlet /> : <Navigate to="/login" replace />;
 }

@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import AppLayout from './components/AppLayout.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './pages/onboarding/Login.jsx';
 import Welcome from './pages/onboarding/Welcome.jsx';
 import Signup from './pages/onboarding/Signup.jsx';
 import Success from './pages/onboarding/Success.jsx';
@@ -19,7 +20,7 @@ import Settings from './pages/Settings.jsx';
 function RootRedirect() {
   const { user, loading } = useAuth();
   if (loading) return null;
-  return <Navigate to={user ? '/app/home' : '/onboarding/invite'} replace />;
+  return <Navigate to={user ? '/app/home' : '/login'} replace />;
 }
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
 
+      <Route path="/login" element={<Login />} />
       <Route path="/onboarding/invite" element={<Welcome />} />
       <Route path="/onboarding/signup" element={<Signup />} />
       <Route path="/onboarding/success" element={<Success />} />

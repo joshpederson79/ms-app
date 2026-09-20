@@ -10,7 +10,7 @@ export default function Settings() {
 
   const signOut = () => {
     logout();
-    navigate('/onboarding/invite');
+    navigate('/login');
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button.jsx';
 import Input from '../../components/Input.jsx';
 import api from '../../utils/api.js';
@@ -35,6 +35,7 @@ export default function Welcome() {
       <Input label="Invite code" name="invite" value={code} onChange={(e) => setCode(e.target.value)} error={error} />
       <Button type="submit" disabled={!code.trim()}>Continue</Button>
       <p className="muted">Don't have a code? Contact your band leader.</p>
+      <p className="muted">Already a member? <Link to="/login">Log in</Link></p>
     </form>
   );
 }
