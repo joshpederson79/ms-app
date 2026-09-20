@@ -19,8 +19,13 @@ export default function Welcome() {
       if (!data.valid) return setError('That invite code is not valid.');
       sessionStorage.setItem(INVITE_KEY, code);
       navigate('/onboarding/signup');
-    } catch {
-      setError('Could not reach the server. Try again.');
+    } catch (err) {
+      // A response means the API was reached but rejected the request; no response means network, CORS or a sleeping server.
+      setError(
+        err.response
+          ? `The server returned an error (${err.response.status}). Check the API URL and try again.`
+          : 'Could not reach the server. If it has been idle, wait up to a minute for it to wake up, then try again.'
+      );
     }
   };
 

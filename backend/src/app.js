@@ -6,7 +6,7 @@ import { errorHandler, notFound } from './middleware/errorHandler.js';
 
 const app = express();
 
-app.use(cors({ origin: env.frontendUrl }));
+app.use(cors({ origin: env.frontendUrls }));
 app.use(express.json({ limit: '1mb' }));
 app.use('/api', routes);
 app.use(notFound);
