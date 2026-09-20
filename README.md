@@ -45,5 +45,5 @@ See `claude.md` for the full project context and the `Moonshine_Saints_*.md` doc
 See `SETUP_GUIDE_SIMPLIFIED.md` for the click-by-click walkthrough.
 
 ## Status
-Songs (with ChordPro tabs), gigs and setlists, and messaging are implemented. Recordings (MP3 upload / YouTube link),
+Songs (with ChordPro tabs), gigs and setlists, saved setlists, a full-screen stage view (with offline copies), and messaging are implemented. Recordings (MP3 upload / YouTube link),
 comments on tabs, the home feed and message search are not yet; their endpoints return `501`.

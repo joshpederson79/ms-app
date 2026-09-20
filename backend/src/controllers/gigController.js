@@ -29,7 +29,7 @@ export const listGigs = async (req, res) => res.json(await Gig.list());
 
 export const getGig = async (req, res) => {
   const gig = await requireGig(parseId(req.params.id));
-  res.json({ ...gig, setlist: await SetlistItem.forGig(gig.id) });
+  res.json({ ...gig, setlist: await SetlistItem.forOwner('gig', gig.id) });
 };
 
 export const createGig = async (req, res) => {

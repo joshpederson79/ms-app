@@ -12,7 +12,7 @@ import styles from './Setlist.module.css';
 
 const singers = (item) => `${item.leadSingerName}${item.isDuet ? ` & ${item.secondSingerName}` : ''}`;
 
-function SetlistRow({ item, index, canManage, onRemove }) {
+function SetlistRow({ item, index, canManage, onRemove, stageBase }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
     disabled: !canManage,
@@ -29,6 +29,7 @@ function SetlistRow({ item, index, canManage, onRemove }) {
       <span className={styles.position}>{index + 1}</span>
       <div className={styles.song}>
         <Link to={`/app/songs/${item.songId}`}>{item.songName}</Link>
+        {stageBase && <> <Link to={`${stageBase}/${index + 1}`} aria-label={`Open ${item.songName} in stage view`}>▶ Stage</Link></>}
         <div className="muted">
           {singers(item)}
           {item.status !== 'Final' && <> • <StatusBadge kind="wip" /></>}
@@ -75,8 +76,9 @@ function SongPicker({ existingSongIds, onPick }) {
   );
 }
 
-// Setlist with drag-and-drop reordering for gig leads, read-only for everyone else.
-export default function Setlist({ gigId, items: serverItems, canManage, onChanged }) {
+// Song list with drag-and-drop reordering for those who can manage it, read-only for everyone else.
+// `itemsPath` is the API collection for the items (a gig's or a saved setlist's); `stageBase` is the stage-view URL prefix.
+export default function Setlist({ itemsPath, stageBase, items: serverItems, canManage, onChanged }) {
   const [items, setItems] = useState(serverItems);
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState('');
@@ -104,11 +106,11 @@ export default function Setlist({ gigId, items: serverItems, canManage, onChange
     const from = items.findIndex((i) => i.id === active.id);
     const to = items.findIndex((i) => i.id === over.id);
     setItems(arrayMove(items, from, to));
-    run(() => api.patch(`/gigs/${gigId}/setlist/${active.id}`, { position: to + 1 }), 'Could not reorder the setlist.');
+    run(() => api.patch(`${itemsPath}/${active.id}`, { position: to + 1 }), 'Could not reorder the setlist.');
   };
 
-  const addSong = (song) => run(() => api.post(`/gigs/${gigId}/setlist`, { song_id: song.id }), 'Could not add that song.');
-  const removeItem = (item) => run(() => api.delete(`/gigs/${gigId}/setlist/${item.id}`), 'Could not remove that song.');
+  const addSong = (song) => run(() => api.post(itemsPath, { song_id: song.id }), 'Could not add that song.');
+  const removeItem = (item) => run(() => api.delete(`${itemsPath}/${item.id}`), 'Could not remove that song.');
 
   return (
     <section className="stack">
@@ -131,7 +133,7 @@ export default function Setlist({ gigId, items: serverItems, canManage, onChange
           <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
             <ol className={styles.list}>
               {items.map((item, index) => (
-                <SetlistRow key={item.id} item={item} index={index} canManage={canManage} onRemove={removeItem} />
+                <SetlistRow key={item.id} item={item} index={index} canManage={canManage} onRemove={removeItem} stageBase={stageBase} />
               ))}
             </ol>
           </SortableContext>

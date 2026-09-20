@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Button from '../components/Button.jsx';
 import Card from '../components/Card.jsx';
+import OfflinePacks from '../components/OfflinePacks.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useGigs } from '../hooks/useGigs.js';
@@ -35,10 +36,12 @@ export default function GigsList() {
     <div className="stack">
       <div className="row between">
         <h2 style={{ marginBottom: 0 }}>Gigs</h2>
+        <Link to="/app/setlists">Setlists</Link>
         {canManageGigs(user) && <Link to="/app/gigs/create"><Button type="button">+ New Gig</Button></Link>}
       </div>
 
-      {error && <p className="error-text">Could not load gigs.</p>}
+      {error && <p className="error-text">Could not load gigs. Check your connection.</p>}
+      <OfflinePacks kind="gig" />
       {!error && !loading && gigs.length === 0 && <p className="muted">No gigs yet.</p>}
 
       {upcoming.length > 0 && <h3>Upcoming</h3>}

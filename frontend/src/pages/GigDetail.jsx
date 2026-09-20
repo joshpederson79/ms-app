@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import AttachSetlist from '../components/AttachSetlist.jsx';
 import Button from '../components/Button.jsx';
+import OfflineButton from '../components/OfflineButton.jsx';
 import Setlist from '../components/Setlist.jsx';
 import StatusBadge from '../components/StatusBadge.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -54,7 +56,13 @@ export default function GigDetail() {
       )}
       {actionError && <span className="error-text">{actionError}</span>}
 
-      <Setlist gigId={gig.id} items={gig.setlist} canManage={canManage} onChanged={reload} />
+      <div className="row">
+        {gig.setlist.length > 0 && <Link to={`/stage/gig/${gig.id}/1`}><Button type="button">▶ Stage view</Button></Link>}
+      </div>
+      <OfflineButton kind="gig" id={gig.id} />
+      {canManage && <AttachSetlist gigId={gig.id} onAttached={reload} />}
+
+      <Setlist itemsPath={`/gigs/${gig.id}/setlist`} stageBase={`/stage/gig/${gig.id}`} items={gig.setlist} canManage={canManage} onChanged={reload} />
     </div>
   );
 }

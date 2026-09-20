@@ -16,8 +16,11 @@ router.get('/:id', wrap(gigs.getGig));
 router.patch('/:id', gigLead, validate(gigs.updateGigSchema), wrap(gigs.updateGig));
 router.delete('/:id', gigLead, wrap(gigs.deleteGig));
 
+router.get('/:id/stage', wrap(setlist.getGigStage)); // every song with its latest tab, for stage view / offline
+
 // Setlist: only Final songs may be added (enforced in the controller).
 router.get('/:id/setlist', wrap(setlist.getSetlist));
+router.post('/:id/setlist/attach', gigLead, validate(setlist.attachSchema), wrap(setlist.attachSetlist)); // copy a saved setlist in
 router.post('/:id/setlist', gigLead, validate(setlist.addItemSchema), wrap(setlist.addSetlistItem));
 router.patch('/:id/setlist/:itemId', gigLead, validate(setlist.moveItemSchema), wrap(setlist.updateSetlistItem)); // reorder
 router.delete('/:id/setlist/:itemId', gigLead, wrap(setlist.removeSetlistItem));

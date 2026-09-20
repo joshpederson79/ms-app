@@ -13,6 +13,9 @@ import UploadSong from './pages/UploadSong.jsx';
 import GigsList from './pages/GigsList.jsx';
 import GigDetail from './pages/GigDetail.jsx';
 import CreateGig from './pages/CreateGig.jsx';
+import Stage from './pages/Stage.jsx';
+import SetlistsList from './pages/SetlistsList.jsx';
+import SetlistDetail from './pages/SetlistDetail.jsx';
 import Messages from './pages/Messages.jsx';
 import MessageThread from './pages/MessageThread.jsx';
 import Settings from './pages/Settings.jsx';
@@ -43,10 +46,19 @@ export default function App() {
           <Route path="gigs/create" element={<CreateGig />} />
           <Route path="gigs/:id" element={<GigDetail />} />
           <Route path="gigs/:id/edit" element={<CreateGig />} />
+          <Route path="setlists" element={<SetlistsList />} />
+          <Route path="setlists/:id" element={<SetlistDetail />} />
           <Route path="messages" element={<Messages />} />
           <Route path="messages/:id" element={<MessageThread />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+      </Route>
+
+      {/* Stage view is full screen, so it sits outside AppLayout (no header or bottom nav). */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/stage/song/:id" element={<Stage kind="song" />} />
+        <Route path="/stage/gig/:id/:pos?" element={<Stage kind="gig" />} />
+        <Route path="/stage/setlist/:id/:pos?" element={<Stage kind="setlist" />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

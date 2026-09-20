@@ -70,13 +70,24 @@ CREATE TABLE gigs (
 );
 CREATE INDEX idx_gigs_date ON gigs(date);
 
-CREATE TABLE setlist_items (
+CREATE TABLE setlists (
   id SERIAL PRIMARY KEY,
-  gig_id INT NOT NULL REFERENCES gigs(id) ON DELETE CASCADE,
-  song_id INT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
-  position INT NOT NULL,
+  name TEXT NOT NULL,
+  created_by INT REFERENCES users(id),
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- A song row belongs to exactly one owner: a gig, or a standalone saved setlist.
+CREATE TABLE setlist_items (
+  id SERIAL PRIMARY KEY,
+  gig_id INT REFERENCES gigs(id) ON DELETE CASCADE,
+  setlist_id INT REFERENCES setlists(id) ON DELETE CASCADE,
+  song_id INT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+  position INT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  CONSTRAINT setlist_items_one_owner CHECK ((gig_id IS NULL) <> (setlist_id IS NULL))
+);
+CREATE INDEX idx_setlist_items_setlist_id ON setlist_items(setlist_id);
 CREATE INDEX idx_setlist_gig_id ON setlist_items(gig_id);
 
 CREATE TABLE messages (

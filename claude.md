@@ -322,6 +322,21 @@ GET    /api/gigs/:id/setlist      (current setlist)
 POST   /api/gigs/:id/setlist      (add song)
 PATCH  /api/gigs/:id/setlist/:itemId (reorder: change position)
 DELETE /api/gigs/:id/setlist/:itemId (remove song)
+POST   /api/gigs/:id/setlist/attach  (copy a saved setlist's Final songs onto the gig; Gig Lead only)
+GET    /api/gigs/:id/stage           (every song + latest tab in one call, for stage view / offline)
+```
+
+### Saved Setlists (standalone; any member can create/edit, creator or admin deletes)
+```
+GET    /api/setlists              (list with song counts)
+POST   /api/setlists              (name)
+GET    /api/setlists/:id          (setlist + items)
+PATCH  /api/setlists/:id          (rename)
+DELETE /api/setlists/:id
+POST   /api/setlists/:id/items    (song_id; Final songs only)
+PATCH  /api/setlists/:id/items/:itemId  (reorder: position)
+DELETE /api/setlists/:id/items/:itemId
+GET    /api/setlists/:id/stage    (every song + latest tab in one call)
 ```
 
 ### Messages
@@ -358,9 +373,24 @@ DELETE /api/comments/:id
 /app/gigs            → Gigs list
 /app/gigs/:id        → Gig detail + setlist builder
 /app/gigs/create     → Create gig
+/app/gigs/:id/edit   → Edit gig
+/app/setlists        → Saved setlists
+/app/setlists/:id    → Setlist detail (drag-drop, stage view, save offline)
+/stage/song/:id            → Stage view: one song's chart, full screen
+/stage/gig/:id/:pos?       → Stage view through a gig's setlist (pos = 1-based song)
+/stage/setlist/:id/:pos?   → Stage view through a saved setlist
 /app/messages        → Messages
 /app/settings        → Settings
 ```
+
+### Stage View & Offline
+- Stage view (`pages/Stage.jsx`) is full screen, outside `AppLayout`: chart only, font size, auto-scroll, screen wake lock, prev/next.
+- "Save for offline" stores a gig's/setlist's songs + tabs in localStorage (`utils/offline.js`). Stage view falls back to
+  it after 4s without a server response (Render cold starts, weak venue signal).
+- `public/sw.js` caches the app shell (production only) so the app opens offline. The cached user in `AuthContext`
+  keeps the session alive offline; only a 401 logs out.
+- A setlist item belongs to a gig **or** a saved setlist (`setlist_items`: exactly one of `gig_id` / `setlist_id`).
+  Attaching copies songs onto the gig; the two are independent afterwards.
 
 ### State Management
 - **Auth:** React Context + localStorage (token)

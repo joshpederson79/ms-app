@@ -93,6 +93,7 @@ export default function SongDetail() {
       <div className="row">
         <Button variant="secondary" onClick={() => setMode('editSong')}>Edit song</Button>
         {isSongWriter && <Button variant="secondary" onClick={deleteSong}>Delete song</Button>}
+        {latest && <Link to={`/stage/song/${song.id}`}><Button type="button">▶ Stage view</Button></Link>}
         <Link to={`/app/messages?song=${song.id}`}>💬 Discuss</Link>
       </div>
       {actionError && <span className="error-text">{actionError}</span>}
