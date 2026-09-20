@@ -5,6 +5,7 @@ const ITEMS = [
   { to: '/app/home', label: 'Home', icon: '🏠' },
   { to: '/app/songs', label: 'Songs', icon: '🎵' },
   { to: '/app/gigs', label: 'Gigs', icon: '🎪' },
+  { to: '/app/setlists', label: 'Setlists', icon: '📋' },
   { to: '/app/messages', label: 'Messages', icon: '💬' },
 ];
 
