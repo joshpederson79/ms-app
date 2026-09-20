@@ -43,3 +43,12 @@ export const createWithInvite = async ({ name, email, passwordHash, inviteCode }
 
 export const isInviteValid = async (code) =>
   Boolean((await query('SELECT 1 FROM invite_codes WHERE code = $1 AND used_by IS NULL', [code])).rows[0]);
+
+export const listMembers = async () =>
+  (await query('SELECT id, name, role FROM users ORDER BY lower(name)')).rows;
+
+export const namesByIds = async (ids) =>
+  (await query('SELECT id, name FROM users WHERE id = ANY($1::int[]) ORDER BY lower(name)', [ids])).rows;
+
+export const setRole = async (id, role) =>
+  (await query(`UPDATE users SET role = $2 WHERE id = $1 RETURNING ${PUBLIC_COLUMNS}`, [id, role])).rows[0];

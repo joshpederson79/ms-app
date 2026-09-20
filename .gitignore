@@ -1,6 +1,29 @@
+# Dependencies
 node_modules/
-dist/
+.npm
+package-lock.json
+yarn.lock
+
+# Environment
 .env
 .env.local
+.env.*.local
 .DS_Store
+
+# Build outputs
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS
+Thumbs.db
+.DS_Store

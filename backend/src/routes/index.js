@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import userRoutes from './userRoutes.js';
 import authRoutes from './authRoutes.js';
 import songRoutes from './songRoutes.js';
 import tabRoutes from './tabRoutes.js';
@@ -10,6 +11,7 @@ const router = Router();
 
 router.get('/health', (req, res) => res.json({ status: 'ok' }));
 router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 router.use('/songs', songRoutes);
 router.use('/tabs', tabRoutes);
 router.use('/comments', commentRoutes);

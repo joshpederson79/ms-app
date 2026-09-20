@@ -13,6 +13,7 @@ import GigsList from './pages/GigsList.jsx';
 import GigDetail from './pages/GigDetail.jsx';
 import CreateGig from './pages/CreateGig.jsx';
 import Messages from './pages/Messages.jsx';
+import MessageThread from './pages/MessageThread.jsx';
 import Settings from './pages/Settings.jsx';
 
 function RootRedirect() {
@@ -39,7 +40,9 @@ export default function App() {
           <Route path="gigs" element={<GigsList />} />
           <Route path="gigs/create" element={<CreateGig />} />
           <Route path="gigs/:id" element={<GigDetail />} />
+          <Route path="gigs/:id/edit" element={<CreateGig />} />
           <Route path="messages" element={<Messages />} />
+          <Route path="messages/:id" element={<MessageThread />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Route>

@@ -1,0 +1,38 @@
+.wrap { display: flex; gap: 0.5rem; align-items: flex-end; max-width: 85%; }
+.own { align-self: flex-end; flex-direction: row-reverse; }
+.avatar {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-border);
+  color: var(--color-cream);
+  font-size: 11px;
+  font-weight: 600;
+}
+.bubble {
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-container);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+.own .bubble { background: var(--color-copper); border-color: var(--color-copper); }
+.meta { font-size: 11px; color: var(--color-text-secondary); }
+.own .meta { color: rgba(255, 255, 255, 0.8); }
+.content { white-space: pre-wrap; overflow-wrap: anywhere; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; font-size: 11px; }
+.own .chips a, .own .footer a, .own .footer button { color: #fff; text-decoration: underline; }
+.footer { display: flex; gap: var(--space-2); align-items: center; margin-top: 0.25rem; font-size: 11px; }
+.footer button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--color-text-secondary);
+  font: inherit;
+  cursor: pointer;
+  min-height: 24px;
+}
+.resolved { opacity: 0.6; }

@@ -1,0 +1,12 @@
+.composer {
+  position: sticky;
+  bottom: calc(var(--tap-target) + 1px); /* sits just above the bottom nav */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1) 0;
+  background: var(--color-bg);
+}
+.tag summary { cursor: pointer; font-size: 11px; color: var(--color-text-secondary); min-height: 24px; }
+.send { display: flex; gap: var(--space-1); align-items: flex-end; }
+.send > :first-child { flex: 1; }

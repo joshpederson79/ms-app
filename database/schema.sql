@@ -22,6 +22,7 @@ CREATE TABLE songs (
   name TEXT NOT NULL,
   lead_singer_id INT REFERENCES users(id),
   is_duet BOOLEAN NOT NULL DEFAULT FALSE,
+  second_singer_id INT REFERENCES users(id), -- only set for duets
   songwriters INT[] NOT NULL DEFAULT '{}',
   status TEXT NOT NULL DEFAULT 'WIP' CHECK (status IN ('WIP', 'Final')),
   lyrics TEXT,
@@ -59,7 +60,7 @@ CREATE TABLE recordings (
 
 CREATE TABLE gigs (
   id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT, -- optional label, e.g. 'Fall Kickoff'
   venue TEXT NOT NULL,
   date DATE NOT NULL,
   time TIME,
@@ -83,6 +84,8 @@ CREATE TABLE messages (
   content TEXT NOT NULL,
   sender_id INT NOT NULL REFERENCES users(id),
   parent_message_id INT REFERENCES messages(id) ON DELETE CASCADE,
+  song_id INT REFERENCES songs(id) ON DELETE SET NULL, -- optional tag on a thread's root message
+  gig_id INT REFERENCES gigs(id) ON DELETE SET NULL,
   is_resolved BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW()
 );

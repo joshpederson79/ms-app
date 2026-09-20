@@ -1,0 +1,19 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  margin: 0;
+  padding: 0.5rem var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+.group legend { padding: 0 0.25rem; font-size: 11px; color: var(--color-text-secondary); }
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: var(--tap-target);
+  font-size: 13px;
+}
+.check input { accent-color: var(--color-copper); width: 16px; height: 16px; }
+.file { font-size: 12px; color: var(--color-text-secondary); }
