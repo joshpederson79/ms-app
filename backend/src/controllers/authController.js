@@ -42,9 +42,10 @@ export const login = async (req, res) => {
   res.json({ token: signToken(user), user });
 };
 
-// Used by the onboarding welcome screen before sign-up.
+// Used by the onboarding welcome screen before sign-up; `name` pre-fills the sign-up form.
 export const checkInvite = async (req, res) => {
-  res.json({ valid: await User.isInviteValid(req.body.invite_code) });
+  const invite = await User.findOpenInvite(req.body.invite_code);
+  res.json({ valid: Boolean(invite), name: invite?.name ?? null });
 };
 
 export const verifyToken = async (req, res) => {

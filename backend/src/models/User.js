@@ -41,8 +41,9 @@ export const createWithInvite = async ({ name, email, passwordHash, inviteCode }
   }
 };
 
-export const isInviteValid = async (code) =>
-  Boolean((await query('SELECT 1 FROM invite_codes WHERE code = $1 AND used_by IS NULL', [code])).rows[0]);
+// Returns the unused invite ({ name } is the pre-filled member name, may be null) or undefined.
+export const findOpenInvite = async (code) =>
+  (await query('SELECT name FROM invite_codes WHERE code = $1 AND used_by IS NULL', [code])).rows[0];
 
 export const listMembers = async () =>
   (await query('SELECT id, name, role FROM users ORDER BY lower(name)')).rows;

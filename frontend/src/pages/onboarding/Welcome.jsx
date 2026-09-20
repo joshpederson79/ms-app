@@ -5,6 +5,7 @@ import Input from '../../components/Input.jsx';
 import api from '../../utils/api.js';
 
 export const INVITE_KEY = 'ms_invite_code';
+export const INVITE_NAME_KEY = 'ms_invite_name';
 
 export default function Welcome() {
   const [code, setCode] = useState('');
@@ -18,6 +19,7 @@ export default function Welcome() {
       const { data } = await api.post('/auth/check-invite', { invite_code: code });
       if (!data.valid) return setError('That invite code is not valid.');
       sessionStorage.setItem(INVITE_KEY, code);
+      sessionStorage.setItem(INVITE_NAME_KEY, data.name ?? '');
       navigate('/onboarding/signup');
     } catch (err) {
       // A response means the API was reached but rejected the request; no response means network, CORS or a sleeping server.

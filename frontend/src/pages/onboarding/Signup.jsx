@@ -4,10 +4,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button.jsx';
 import Input from '../../components/Input.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { INVITE_KEY } from './Welcome.jsx';
+import { INVITE_KEY, INVITE_NAME_KEY } from './Welcome.jsx';
 
 export default function Signup() {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: { name: sessionStorage.getItem(INVITE_NAME_KEY) ?? '' }, // set by the admin on the invite code
+  });
   const { signup } = useAuth();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
@@ -20,6 +22,7 @@ export default function Signup() {
     try {
       await signup({ ...values, invite_code: inviteCode });
       sessionStorage.removeItem(INVITE_KEY);
+      sessionStorage.removeItem(INVITE_NAME_KEY);
       navigate('/onboarding/success');
     } catch (err) {
       setServerError(err.response?.data?.message || 'Could not create account.');
