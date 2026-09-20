@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import { env, JWT_EXPIRES_IN } from '../config/env.js';
+import { env } from '../config/env.js';
 import { HttpError } from '../middleware/errorHandler.js';
 import * as User from '../models/User.js';
 
@@ -20,7 +20,7 @@ export const loginSchema = z.object({
 export const inviteSchema = z.object({ invite_code: z.string().trim().min(1) });
 
 const signToken = (user) =>
-  jwt.sign({ id: user.id, role: user.role, isAdmin: user.isAdmin }, env.jwtSecret, { expiresIn: JWT_EXPIRES_IN });
+  jwt.sign({ id: user.id, role: user.role, isAdmin: user.isAdmin }, env.jwtSecret, { expiresIn: env.jwtExpiration });
 
 export const signup = async (req, res) => {
   const { name, email, password, invite_code } = req.body;

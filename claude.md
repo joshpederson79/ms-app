@@ -60,8 +60,10 @@
 ### 5. Recording Management
 
 - One recording per tab version
-- Upload MP3 or link YouTube video
-- Player in-app; streaming from Cloudinary or YouTube
+- **Two options:**
+  1. YouTube link (band uploads to YouTube, paste URL)
+  2. MP3 upload (stored in Supabase Storage, 1GB free tier)
+- Player in-app; embedded YouTube or HTML5 audio
 
 ---
 
@@ -119,11 +121,12 @@ Text Muted:     #666
 |-------|-----------|------|-------|
 | Frontend | React 18 + Vite | $0 | SPA, fast build, hot reload |
 | Backend | Node.js + Express | $0 | Lightweight, JavaScript all the way |
-| Database | PostgreSQL on Supabase | $0 | Free tier: 500MB storage, no auth needed for MVP |
-| File Storage | Cloudinary | $0 | 25GB/month free, no watermarks |
+| Database | PostgreSQL on Supabase | $0 | Free tier: 500MB storage, 1GB file storage included |
+| File Storage | Supabase Storage | $0 | Included with Supabase, 1GB free |
+| Recording Links | YouTube | $0 | Band members upload; store URL in database |
 | Frontend Hosting | Vercel | $0 | Auto-deploy on push, serverless |
-| Backend Hosting | Railway | $0 | Free $5 monthly credit (sufficient for MVP) |
-| **Total** | | **$0/month** | |
+| Backend Hosting | Render | $0 | Free tier (cold starts OK for band app) |
+| **Total** | | **$0/month forever** | 3 services total |
 
 ### Dependencies (Minimal, No Bloat)
 
@@ -141,8 +144,8 @@ Text Muted:     #666
 - `jsonwebtoken` — JWT auth
 - `dotenv` — Environment variables
 - `cors` — Cross-origin requests
-- `multer` — File uploads
-- `cloudinary` — File upload API
+- `multer` — File uploads to Supabase
+- `@supabase/supabase-js` — File storage + database client
 - `zod` — Input validation
 
 ---
@@ -448,7 +451,21 @@ DELETE /api/comments/:id
 ### Why Zero-Cost Tech Stack?
 - MVP validation before paid infrastructure
 - Josh has day job; minimal operational overhead
-- Can upgrade to paid tiers later (Supabase, Railway)
+- Only 3 services: Vercel, Render, Supabase (truly free forever)
+- Can upgrade to paid tiers later if needed
+
+### Why Supabase Storage for MP3s?
+- Included with Supabase free tier (1GB storage)
+- One provider = simpler auth, fewer services
+- Can upgrade to more storage later
+- Alternative: band members upload to YouTube and paste URL (even simpler)
+
+### Why YouTube Links for Recordings?
+- Band members already have YouTube accounts
+- Free unlimited storage
+- Can set videos to unlisted (band only, not public)
+- No extra infrastructure needed
+- Simple: paste YouTube URL in database
 
 ### Why ChordPro Format?
 - Musician standard; widely supported
@@ -471,15 +488,10 @@ DELETE /api/comments/:id
 - Admin assigns roles (prevents wrong permissions)
 - Can revoke by deleting code from database
 
-### Why Cloudinary (Not AWS)?
-- Free tier covers band needs (25GB/month)
-- Built-in image transformations (resize, compress)
-- Simple API; no credential management complexity
-
 ### Why Supabase (Not Heroku/AWS)?
 - Managed PostgreSQL (no ops work)
 - Free tier covers MVP
-- Integrates with Railway backend (same region possible)
+- Database and file storage under one project and one set of credentials
 - Can export data if needed (Postgres standard)
 
 ---
@@ -498,7 +510,7 @@ DELETE /api/comments/:id
 1. User fills form: ChordPro file + MP3
 2. Frontend calls POST /api/songs/:id/tabs with FormData
 3. Backend parses ChordPro → display format (JSONB)
-4. Backend uploads MP3 to Cloudinary
+4. Backend uploads MP3 to Supabase Storage (`backend/src/config/storage.js`)
 5. Backend stores tab + recording metadata
 6. Frontend displays parsed chords + player
 
@@ -520,8 +532,9 @@ DELETE /api/comments/:id
 ## Deployment Checklist (Phase 2)
 
 ### Before First Deployment
-- [ ] Environment variables configured (Supabase, Cloudinary, JWT secret)
+- [ ] Environment variables configured (Supabase, JWT secret)
 - [ ] Database schema created in Supabase
+- [ ] Supabase Storage bucket created for recordings
 - [ ] Backend API tested locally
 - [ ] Frontend tested locally
 - [ ] Error handling for all edge cases
@@ -530,20 +543,23 @@ DELETE /api/comments/:id
 
 ### Vercel (Frontend)
 - [ ] Connect GitHub repo
+- [ ] Set root directory to `./frontend`
 - [ ] Set environment variables
 - [ ] Auto-deploy on push to main
 
-### Railway (Backend)
-- [ ] Create project
-- [ ] Deploy from GitHub
+### Render (Backend)
+- [ ] Create Web Service from GitHub
+- [ ] Set root directory to `./backend`
+- [ ] Start command: `node src/server.js`
 - [ ] Set environment variables
-- [ ] Configure Procfile or package.json start script
+- [ ] Note public URL for FRONTEND_URL env var
 
-### Supabase (Database)
+### Supabase (Database + Storage)
 - [ ] Create project
 - [ ] Run schema.sql to create tables
-- [ ] Note database URL and API key
-- [ ] Configure CORS for Vercel domain
+- [ ] Create storage bucket named `recordings`
+- [ ] Note Supabase URL and public key
+- [ ] Configure CORS for both Vercel and Render domains
 
 ---
 
@@ -579,7 +595,7 @@ DELETE /api/comments/:id
 - **ChordPro Spec:** ChordPro_Parser_Spec.md
 - **Tech Stack:** Moonshine_Saints_Tech_Stack.md
 - **Repo Structure:** Moonshine_Saints_Repo_Structure.md
-- **Setup Guide:** SETUP.md (in repo)
+- **Setup Guide:** SETUP_GUIDE_SIMPLIFIED.md (in repo)
 
 ---
 

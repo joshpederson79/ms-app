@@ -1,5 +1,9 @@
 # Moonshine Saints MVP — Tech Stack Architecture
 
+> **Update:** Hosting and file storage have changed since this document was written.
+> Cloudinary is replaced by **Supabase Storage** (1GB free) and YouTube links for recordings; Railway is replaced by **Render**.
+> The current stack is defined in `claude.md` and `SETUP_GUIDE_SIMPLIFIED.md`; treat the Cloudinary/Railway sections below as superseded.
+
 **Version:** 1.0  
 **Date:** September 19, 2026  
 **Target Cost:** $0/month (MVP, 6 users, 1 year)  
