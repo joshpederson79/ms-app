@@ -16,6 +16,8 @@ export default function UploadSong() {
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm({
     defaultValues: { status: 'WIP', source_type: 'original', songwriters: [String(user.id)], lead_singer_id: '' },
   });
+  // Covers (anything but a band-original tab) don't need a credited songwriter.
+  const isCover = watch('source_type') !== 'original';
   const [serverError, setServerError] = useState('');
 
   const onSubmit = async (values) => {
@@ -34,7 +36,7 @@ export default function UploadSong() {
   return (
     <form className="stack" onSubmit={handleSubmit(onSubmit)}>
       <h2>Upload song</h2>
-      <SongFields register={register} watch={watch} errors={errors} users={users} />
+      <SongFields register={register} watch={watch} errors={errors} users={users} writersRequired={!isCover} />
       <h3>Tab</h3>
       <TabFields register={register} watch={watch} setValue={setValue} errors={errors} />
       {serverError && <span className="error-text">{serverError}</span>}

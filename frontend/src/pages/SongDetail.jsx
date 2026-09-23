@@ -33,6 +33,10 @@ export default function SongDetail() {
   const tab = viewedTab ?? latest;
   const isLatest = !viewedTab || viewedTab.id === latest?.id;
   const isSongWriter = song.songwriters.includes(user.id) || user.isAdmin;
+  // A cover's actual writer isn't a band member, so lyrics aren't locked to a song writer the way an
+  // original's are; anyone can edit them. Credits stay song-writer-only regardless.
+  const isCover = Boolean(latest && latest.sourceType !== 'original');
+  const canEditLyrics = isSongWriter || isCover;
 
   const done = () => {
     setMode(null);
@@ -61,7 +65,9 @@ export default function SongDetail() {
   };
 
   if (mode === 'editSong') {
-    return <SongEditForm song={song} users={users} canEditLyrics={isSongWriter} onSaved={done} onCancel={() => setMode(null)} />;
+    return (
+      <SongEditForm song={song} users={users} canEditLyrics={canEditLyrics} canEditCredits={isSongWriter} onSaved={done} onCancel={() => setMode(null)} />
+    );
   }
   if (mode === 'editTab' || mode === 'newVersion') {
     return (
@@ -149,7 +155,7 @@ export default function SongDetail() {
 
       <section>
         <h3>Lyrics</h3>
-        {!isSongWriter && <p className="muted">🔒 Edit by song writer only</p>}
+        {!canEditLyrics && <p className="muted">🔒 Edit by song writer only</p>}
         {song.lyrics ? <p style={{ whiteSpace: 'pre-wrap' }}>{song.lyrics}</p> : <p className="muted">No lyrics added.</p>}
       </section>
     </div>

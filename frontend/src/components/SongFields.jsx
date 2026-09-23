@@ -5,7 +5,7 @@ import styles from './Fields.module.css';
 
 // Shared by Upload Song and the song edit form. Lyrics and credits are locked unless the
 // current user is a song writer (canEditLyrics / canEditCredits).
-export default function SongFields({ register, watch, errors, users, canEditLyrics = true, canEditCredits = true }) {
+export default function SongFields({ register, watch, errors, users, canEditLyrics = true, canEditCredits = true, writersRequired = true }) {
   const isDuet = watch('is_duet');
 
   return (
@@ -49,13 +49,21 @@ export default function SongFields({ register, watch, errors, users, canEditLyri
       </fieldset>
 
       <fieldset className={styles.group} disabled={!canEditCredits}>
-        <legend>Song writer(s) * {!canEditCredits && '🔒 edit by song writer only'}</legend>
+        <legend>
+          Song writer(s) {writersRequired && '*'} {!canEditCredits && '🔒 edit by song writer only'}
+          {canEditCredits && !writersRequired && <span className="muted"> (optional for covers)</span>}
+        </legend>
         {users.map((u) => (
           <label key={u.id} className={styles.check}>
             <input
               type="checkbox"
               value={u.id}
-              {...register('songwriters', { validate: (v) => [].concat(v || []).filter(Boolean).length > 0 || 'Pick at least one song writer' })}
+              {...register(
+                'songwriters',
+                writersRequired
+                  ? { validate: (v) => [].concat(v || []).filter(Boolean).length > 0 || 'Pick at least one song writer' }
+                  : {}
+              )}
             />
             {u.name}
           </label>

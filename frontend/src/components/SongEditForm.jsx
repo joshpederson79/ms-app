@@ -5,7 +5,9 @@ import { errorMessage, songPayload } from '../utils/songPayload.js';
 import Button from './Button.jsx';
 import SongFields from './SongFields.jsx';
 
-export default function SongEditForm({ song, users, canEditLyrics, onSaved, onCancel }) {
+export default function SongEditForm({ song, users, canEditLyrics, canEditCredits, onSaved, onCancel }) {
+  // No tab yet, or the current tab is band-original, means it needs a credited songwriter; covers don't.
+  const writersRequired = !song.latestTab || song.latestTab.sourceType === 'original';
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
     defaultValues: {
       name: song.name,
@@ -22,8 +24,7 @@ export default function SongEditForm({ song, users, canEditLyrics, onSaved, onCa
   const onSubmit = async (values) => {
     setServerError('');
     try {
-      // Credits and lyrics are both gated on being a song writer.
-      await api.patch(`/songs/${song.id}`, songPayload(values, { canEditLyrics, canEditCredits: canEditLyrics }));
+      await api.patch(`/songs/${song.id}`, songPayload(values, { canEditLyrics, canEditCredits }));
       onSaved();
     } catch (err) {
       setServerError(errorMessage(err, 'Could not save changes.'));
@@ -39,7 +40,8 @@ export default function SongEditForm({ song, users, canEditLyrics, onSaved, onCa
         errors={errors}
         users={users}
         canEditLyrics={canEditLyrics}
-        canEditCredits={canEditLyrics}
+        canEditCredits={canEditCredits}
+        writersRequired={writersRequired}
       />
       {serverError && <span className="error-text">{serverError}</span>}
       <div className="row">

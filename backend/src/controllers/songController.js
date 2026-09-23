@@ -11,12 +11,19 @@ const songFields = z.object({
   lead_singer_id: z.number().int(),
   is_duet: z.boolean().default(false),
   second_singer_id: z.number().int().nullish(),
-  songwriters: z.array(z.number().int()).min(1, 'Pick at least one songwriter'),
+  songwriters: z.array(z.number().int()), // required unless the tab marks the song as a cover (see createSongSchema)
   status: z.enum(['WIP', 'Final']),
   lyrics: z.string().max(20000).nullish(),
 });
 
-export const createSongSchema = songFields.extend({ tab: tabSchema.optional() });
+// Original songs need at least one credited songwriter; covers (tab source_type !== 'original') don't,
+// since nobody in the band wrote them. No tab yet counts as "not a cover" (source_type defaults to 'original').
+export const createSongSchema = songFields.extend({ tab: tabSchema.optional() }).superRefine((data, ctx) => {
+  const isCover = data.tab && data.tab.source_type !== 'original';
+  if (!isCover && data.songwriters.length === 0) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['songwriters'], message: 'Pick at least one songwriter' });
+  }
+});
 export const updateSongSchema = songFields.partial();
 
 const listQuery = z.object({
@@ -78,8 +85,23 @@ export const updateSong = async (req, res) => {
   const song = await requireSong(id);
   const changes = { ...req.body };
 
-  if ((changes.lyrics !== undefined || changes.songwriters !== undefined) && !ownsSong(song, req.user)) {
-    throw new HttpError(403, 'Only the song writer can edit lyrics or credits', 'forbidden');
+  // Whether this is a cover decides two things below: who may edit lyrics, and whether songwriters can be
+  // cleared entirely. A song with no tab yet is treated as not-a-cover (same default as creation).
+  const latestTab =
+    changes.lyrics !== undefined || changes.songwriters !== undefined ? await Tab.latestForSong(id) : null;
+  const isCover = Boolean(latestTab && latestTab.sourceType !== 'original');
+
+  // Lyrics: owner-only for originals. Open to anyone for covers, since the actual writer isn't a band
+  // member, so there may be no owner at all to lock the field to.
+  if (changes.lyrics !== undefined && !isCover && !ownsSong(song, req.user)) {
+    throw new HttpError(403, 'Only the song writer can edit lyrics', 'forbidden');
+  }
+  // Credits stay owner-only regardless of cover status.
+  if (changes.songwriters !== undefined && !ownsSong(song, req.user)) {
+    throw new HttpError(403, 'Only the song writer can edit credits', 'forbidden');
+  }
+  if (changes.songwriters?.length === 0 && !isCover) {
+    throw new HttpError(400, 'Pick at least one songwriter', 'validation_error');
   }
 
   const merged = {
